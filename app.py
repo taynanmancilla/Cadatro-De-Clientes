@@ -8,7 +8,7 @@ import re
 def ValidarFone(fone):
     padrao = '([0-9]{2,3})?([0-9]{2})([0-9]{4,5})([0-9]{4})'
     resposta = re.findall(padrao, fone)
-    if resposta:
+    if resposta and len(fone)<14 and len(fone)>12:
         return True
     else:
         return False
@@ -57,7 +57,7 @@ def inserir():
         Vfone.get()=="" or Vemail.get()=="":  # Verificando se os campos estao digitados
         messagebox.showinfo(title="ERRO", message="Digite todos os dados!")
         return
-    elif ValidarFone(phone) == False:
+    elif ValidarFone(phone)==False:
         messagebox.showinfo(title="ERRO", message="Digite um Telefone Valido!")
         return
     elif ValidarEmail(email) == False:
@@ -82,7 +82,7 @@ def inserir():
     Vnome.delete(0, END)
     Vendereco.delete(0, END)
     Vcidade.delete(0, END)
-    Vestado.delete(0, END)
+    #Vestado.delete(0, END)
     Vnome.focus()
     
 def deletar():
@@ -126,7 +126,7 @@ tv.column('nome', minwidth=0, width=100)
 tv.column('endereco', minwidth=0, width=200)
 tv.column('cidade', minwidth=0, width=100)
 tv.column('estado', minwidth=0, width=50)
-tv.column('fone', minwidth=0, width=100)
+tv.column('fone', minwidth=0, width=120)
 tv.column('email', minwidth=0, width=150)
 tv.heading('id', text='ID')
 tv.heading('nome', text='NOME')
