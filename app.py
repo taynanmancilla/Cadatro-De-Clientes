@@ -26,7 +26,19 @@ def popular():
     linhas = Banco.dql(Vquery)
     for i in linhas:                                # Puxando os dados do banco
         tv.insert("", "end", values=i)
-        
+
+def verificaPhone(phone):
+    #tv.delete(*tv.get_children())
+    Vquery = "SELECT fone FROM tb_nomes WHERE fone='{}'".format(phone)
+    linhas = Banco.dql(Vquery)
+    if len(linhas)!=0:
+        return False
+    else:
+        return True
+    
+def formataFone(phone):
+    return '+{}({}){}-{}'.format(phone[:2], phone[2:4], phone[4:9], phone[9:])
+
 def inserir():
 
     phone = Vfone.get()
@@ -41,21 +53,25 @@ def inserir():
     elif ValidarEmail(email) == False:
         messagebox.showinfo(title="ERRO", message="Digite um Email Valido!")
         return
+    elif verificaPhone(phone) == False:
+        messagebox.showinfo(title="ERRO", message="Telefone Ja Cadastrado!")
+        return
     try:
+        altera = formataFone(phone)
         Vquery = "INSERT INTO tb_nomes (nome, endereco, cidade, estado, fone, email) \
-                  VALUES ('"+Vnome.get()+"','"+Vendereco.get()+"','"+Vcidade.get()+"','"+Vestado.get()+"' ,'"+Vfone.get()+"', '"+Vemail.get()+"')"
+                  VALUES ('"+Vnome.get()+"','"+Vendereco.get()+"','"+Vcidade.get()+"','"+Vestado.get()+"' ,'"+altera+"', '"+Vemail.get()+"')"
         Banco.dml(Vquery)
     except:
         messagebox.showinfo(title="ERRO", message="Erro as Inserir")
         return
     
     popular()
+    Vemail.delete(0, END)
+    Vfone.delete(0, END)
     Vnome.delete(0, END)
     Vendereco.delete(0, END)
     Vcidade.delete(0, END)
     Vestado.delete(0, END)
-    Vfone.delete(0, END)
-    Vemail.delete(0, END)
     Vnome.focus()
     
 def deletar():
