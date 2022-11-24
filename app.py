@@ -5,6 +5,9 @@ import Banco
 import re
 from Banco import TelefonesBr
 
+def email():
+    pass
+
 def popular():
     tv.delete(*tv.get_children())                   # Deletando os registros do TreeView
     Vquery = "SELECT * FROM tb_nomes order by ID"   # Pesquisa do SQL q traz todos os nomes ordenados por ID
