@@ -3,7 +3,22 @@ from tkinter import ttk
 from tkinter import messagebox
 import Banco
 import re
-from Banco import TelefonesBr
+
+
+def ValidarFone(fone):
+    padrao = '([0-9]{2,3})?([0-9]{2})([0-9]{4,5})([0-9]{4})'
+    resposta = re.findall(padrao, fone)
+    if resposta:
+        return True
+    else:
+        return False
+def ValidarEmail(email):
+    padrao = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    resposta = re.findall(padrao, email)
+    if resposta:
+        return True
+    else:
+        return False
 
 def popular():
     tv.delete(*tv.get_children())                   # Deletando os registros do TreeView
@@ -13,8 +28,18 @@ def popular():
         tv.insert("", "end", values=i)
         
 def inserir():
+
+    phone = Vfone.get()
+    email = Vemail.get()
+
     if Vnome.get()=="" or Vendereco.get()=="" or Vcidade.get()=="" or Vestado.get()=="" or Vfone.get()=="" or Vemail.get()=="":  # Verificando se os campos estao digitados
         messagebox.showinfo(title="ERRO", message="Digite todos os dados!")
+        return
+    elif ValidarFone(phone) == False:
+        messagebox.showinfo(title="ERRO", message="Digite um Telefone Valido!")
+        return
+    elif ValidarEmail(email) == False:
+        messagebox.showinfo(title="ERRO", message="Digite um Email Valido!")
         return
     try:
         Vquery = "INSERT INTO tb_nomes (nome, endereco, cidade, estado, fone, email) \
@@ -24,7 +49,6 @@ def inserir():
         messagebox.showinfo(title="ERRO", message="Erro as Inserir")
         return
     
-
     popular()
     Vnome.delete(0, END)
     Vendereco.delete(0, END)
