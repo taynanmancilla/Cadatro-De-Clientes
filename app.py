@@ -36,6 +36,15 @@ def verificaPhone(phone):
     else:
         return True
     
+def verificaId(id):
+    #tv.delete(*tv.get_children())
+    Vquery = "SELECT ID FROM tb_nomes WHERE ID='{}'".format(id)
+    linhas = Banco.dql(Vquery)
+    if len(linhas)!=0:
+        return True
+    else:
+        return False
+    
 def formataFone(phone):
     return '+{}({}){}-{}'.format(phone[:2], phone[2:4], phone[4:9], phone[9:])
 
@@ -44,7 +53,8 @@ def inserir():
     phone = Vfone.get()
     email = Vemail.get()
 
-    if Vnome.get()=="" or Vendereco.get()=="" or Vcidade.get()=="" or Vestado.get()=="" or Vfone.get()=="" or Vemail.get()=="":  # Verificando se os campos estao digitados
+    if Vnome.get()=="" or Vendereco.get()=="" or Vcidade.get()=="" or Vestado.get()=="" or \
+        Vfone.get()=="" or Vemail.get()=="":  # Verificando se os campos estao digitados
         messagebox.showinfo(title="ERRO", message="Digite todos os dados!")
         return
     elif ValidarFone(phone) == False:
@@ -59,7 +69,8 @@ def inserir():
     try:
         altera = formataFone(phone)
         Vquery = "INSERT INTO tb_nomes (nome, endereco, cidade, estado, fone, email) \
-                  VALUES ('"+Vnome.get()+"','"+Vendereco.get()+"','"+Vcidade.get()+"','"+Vestado.get()+"' ,'"+altera+"', '"+Vemail.get()+"')"
+                  VALUES ('"+Vnome.get()+"','"+Vendereco.get()+"','"+Vcidade.get()+"','\
+                          "+Vestado.get()+"' ,'"+altera+"', '"+Vemail.get()+"')"
         Banco.dml(Vquery)
     except:
         messagebox.showinfo(title="ERRO", message="Erro as Inserir")
@@ -75,8 +86,12 @@ def inserir():
     Vnome.focus()
     
 def deletar():
+    veri = VidDel.get()
     if VidDel.get()=="":  # Verificando se os campos estao digitados
         messagebox.showinfo(title="ERRO", message="Digite todos os dados!")
+        return
+    elif veri.isnumeric()==False or verificaId(veri)==False:
+        messagebox.showinfo(title="ERRO", message="Digite um ID Valido!")
         return
     try:
         Vquery = "DELETE FROM tb_nomes WHERE ID="+VidDel.get()
@@ -104,7 +119,8 @@ app.geometry("900x600")
 FrameGrade = LabelFrame(app, text="Contatos")
 FrameGrade.pack(fill="both", expand="yes", padx=10, pady=10)
 
-tv = ttk.Treeview(FrameGrade, columns=('id', 'nome', 'endereco', 'cidade', 'estado', 'fone', 'email'), show='headings')
+tv = ttk.Treeview(FrameGrade, columns=('id', 'nome', 'endereco', 'cidade', 'estado', 'fone', 'email'), \
+                                        show='headings')
 tv.column('id', minwidth=0, width=50)
 tv.column('nome', minwidth=0, width=100)
 tv.column('endereco', minwidth=0, width=200)
@@ -150,7 +166,8 @@ LBestado = Label(FrameInserir, text="Estado")
 #LBestado.pack(side="right")
 LBestado.grid(row=3, column=3)
 Vestado = StringVar(FrameInserir)
-TipEstado = ("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO")
+TipEstado = ("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", \
+             "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO")
 Vestado.set("Selecione:")
 popUpEstado = OptionMenu(FrameInserir, Vestado, *TipEstado)
 popUpEstado.grid(row=3, column=4, padx=10)
